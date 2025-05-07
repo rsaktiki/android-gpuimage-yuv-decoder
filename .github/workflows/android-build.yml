@@ -1,4 +1,4 @@
-name: Android Build
+name: Build GPUImage AAR
 
 on:
   push:
@@ -8,11 +8,10 @@ on:
 
 jobs:
   build:
-    name: Build Android GPUImage
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Set up JDK
@@ -21,24 +20,14 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Grant Permission
+        run: chmod +x ./gradlew
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Build AAR Only
+        run: ./gradlew :gpuimage:assembleRelease
 
-      - name: Build Project
-        run: ./gradlew build
-
-      - name: Upload AAR artifact
+      - name: Upload GPUImage AAR
         uses: actions/upload-artifact@v4
         with:
           name: gpuimage-aar
           path: gpuimage/build/outputs/aar/*.aar
-
-      - name: Upload Debug APK (if any)
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: ignore
