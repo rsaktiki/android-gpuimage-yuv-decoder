@@ -1,4 +1,4 @@
-name: Build GPUImage AAR
+name: Build & Upload Artifacts
 
 on:
   push:
@@ -11,23 +11,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: temurin
+          java-version: 11
 
-      - name: Grant Permission
+      - name: Grant executable permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Build AAR
-        run: ./gradlew assembleRelease
+      - name: Build project
+        run: ./gradlew build
 
-      - name: Upload AAR artifact
+      - name: Upload all build artifacts (JAR, AAR, APK, SO)
         uses: actions/upload-artifact@v4
         with:
-          name: gpuimage-aar
-          path: build/outputs/aar/*.aar
+          name: all-build-artifacts
+          path: |
+            **/build/**/*.jar
+            **/build/**/*.aar
+            **/build/**/*.apk
+            **/build/**/*.so
