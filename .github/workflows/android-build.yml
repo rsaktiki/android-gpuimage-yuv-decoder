@@ -23,11 +23,11 @@ jobs:
       - name: Grant Permission
         run: chmod +x ./gradlew
 
-      - name: Build AAR Only
-        run: ./gradlew :gpuimage:assembleRelease
+      - name: Build AAR
+        run: ./gradlew assembleRelease
 
-      - name: Upload GPUImage AAR
+      - name: Upload AAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: gpuimage-aar
-          path: gpuimage/build/outputs/aar/*.aar
+          path: build/outputs/aar/*.aar
